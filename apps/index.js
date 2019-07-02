@@ -28,7 +28,6 @@ let endY;
 let isVertical = true;
 let win = [];
 let a;
-let userIdx;
 let isLoop = false;
 
 // user 카운트 설정
@@ -86,10 +85,6 @@ $start.addEventListener('click', ev => {
 
 // 사다리 결과 라인
 function draw (i, j, dir = 'start', stroke = false) {
-  if (j === 0) {
-    userIdx = i;
-  }
-
   if (isVertical) { // 세로라인
     startX = arrX[i];
     endX = arrX[i];
@@ -153,22 +148,21 @@ function draw (i, j, dir = 'start', stroke = false) {
 
   isVertical = !isVertical;
 
-  if (j < times + 1) {
-    if (stroke) {
-      requestAnimationFrame(function () {
-        draw(i, j, dir, true);
-      });
-      
-    } else {
-      draw(i, j, dir, false);
-    }
-  } else {
+  if (j >= times + 1) {
     if (stroke) {
       $case.children[i].classList.add('active');
     }
-    win[userIdx] = i;
-    return;
+    return i;
   }
+    
+  if (stroke) {
+    requestAnimationFrame(function () {
+      return draw(i, j, dir, true);
+    });
+  } else {
+    return draw(i, j, dir, false);
+  }
+  
 }
 
 // 캔버스 초기화
@@ -267,9 +261,7 @@ $next.addEventListener('click', function () {
         $el.classList.add('active');
         
         // 선택한 인덱스로 draw호출
-        requestAnimationFrame(function () {
-          draw(index, 0, 'start', true);
-        });
+        win[index] = draw(index, 0, 'start', true);
       });
     });
 
@@ -298,7 +290,7 @@ $result.addEventListener('click', ev => {
     for (let i = 0; i < count; i++) {
       isLoop = true;
       ctxReset();
-      draw(i, 0);
+      win[i] = draw(i, 0);
 
       const $p = document.createElement('p');
       const $winText = document.createTextNode(`${$user.children[i].value} → ${$case.children[win[i]].value}`);
