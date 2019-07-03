@@ -187,20 +187,53 @@ function ctxReset () {
 // input 검증
 function validation () {
   const $inp = $step2.querySelectorAll('input');
-  for (let i = 0; i < $inp.length; i++) {
-    if ($inp[i].value === '') {
-      alert('빈칸을 입력하세요.');
-      $inp[i].focus();
-      return false;
-    }
-  }
 
-  return true;
+  return Array.prototype.every.call($inp, function ($el) {
+    if ($el.value === '') {
+      alert('빈칸을 입력하세요.');
+      $el.focus();
+    }
+
+    return $el.value !== '';
+  });
+
+  // return true가 아니라 undefined인 이유: forEach의 리턴값은 undefined
+  // Array.from($inp).forEach(function ($el) {
+  //   if ($el.value === '') {
+  //     alert('빈칸을 입력하세요.');
+  //     $el.focus();
+  //     return false;
+  //   } 
+
+  //   return true;
+  // });
+
+  // forEach문이라 무조건 루프를 다 순회함
+  // const $converted = Array.prototype.slice.call($inp);
+  // $converted.forEach(function ($el) {
+  //   if ($el.value === '') {
+  //     alert('빈칸을 입력하세요.');
+  //     $el.focus();
+  //     return false;
+  //   }
+
+  //   return true;
+  // });
+
+  
+  // for (let i = 0; i < $inp.length; i++) {
+  //   if ($inp[i].value === '') {
+  //     alert('빈칸을 입력하세요.');
+  //     $inp[i].focus();
+  //     return false;
+  //   }
+  // }
+
+  // return true;
 }
 
 // 사다리타기 시작
 $next.addEventListener('click', function () {
-
   if (validation()) {
 
     let prevRandom;
