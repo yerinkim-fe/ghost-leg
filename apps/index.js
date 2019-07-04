@@ -188,6 +188,7 @@ function ctxReset () {
 function validation () {
   const $inp = $step2.querySelectorAll('input');
 
+  // every메서드의 리턴값을 반환함
   return Array.prototype.every.call($inp, function ($el) {
     if ($el.value === '') {
       alert('빈칸을 입력하세요.');
